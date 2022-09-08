@@ -4,7 +4,7 @@ import type { Column, FormatterProps } from '../../src';
 import type { Props } from './types';
 
 type Row = number;
-const rows: readonly Row[] = [...Array(1000).keys()];
+const rows: readonly Row[] = [...Array(150000).keys()];
 
 function cellFormatter(props: FormatterProps<Row>) {
   return (

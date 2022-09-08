@@ -14,7 +14,7 @@ export const cell = css`
   padding-inline: 8px;
   border-inline-end: 1px solid var(--rdg-border-color);
   border-block-end: 1px solid var(--rdg-border-color);
-  grid-row-start: var(--rdg-grid-row-start);
+  height: var(--rdg-row-height);
   background-color: inherit;
 
   white-space: nowrap;
