@@ -1273,7 +1273,7 @@ function DataGrid<R, SR, K extends Key>(
                   bottomSummaryRowsCount * summaryRowHeight
                 }px`
               : undefined,
-          gridTemplateRows: templateRows,
+          // gridTemplateRows: templateRows,
           '--rdg-header-row-height': `${headerRowHeight}px`,
           '--rdg-summary-row-height': `${summaryRowHeight}px`,
           '--rdg-sign': isRtl ? -1 : 1,
