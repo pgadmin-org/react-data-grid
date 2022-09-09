@@ -379,7 +379,7 @@ function DataGrid<R, SR, K extends Key>(
     rows,
     rowsCount,
     totalRowHeight,
-    gridTemplateRows,
+    // gridTemplateRows,
     isGroupRow,
     getRowTop,
     getRowHeight,
@@ -1222,16 +1222,16 @@ function DataGrid<R, SR, K extends Key>(
     setDraggedOverRowIdx(undefined);
   }
 
-  let templateRows = `${headerRowHeight}px`;
-  if (topSummaryRowsCount > 0) {
-    templateRows += ` repeat(${topSummaryRowsCount}, ${summaryRowHeight}px)`;
-  }
-  if (rows.length > 0) {
-    templateRows += gridTemplateRows;
-  }
-  if (bottomSummaryRowsCount > 0) {
-    templateRows += ` repeat(${bottomSummaryRowsCount}, ${summaryRowHeight}px)`;
-  }
+  // let templateRows = `${headerRowHeight}px`;
+  // if (topSummaryRowsCount > 0) {
+  //   templateRows += ` repeat(${topSummaryRowsCount}, ${summaryRowHeight}px)`;
+  // }
+  // if (rows.length > 0) {
+  //   templateRows += gridTemplateRows;
+  // }
+  // if (bottomSummaryRowsCount > 0) {
+  //   templateRows += ` repeat(${bottomSummaryRowsCount}, ${summaryRowHeight}px)`;
+  // }
 
   // Reset the positions if the current values are no longer valid. This can happen if a column or row is removed
   if (selectedPosition.idx > maxColIdx || selectedPosition.rowIdx > maxRowIdx) {
