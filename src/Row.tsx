@@ -6,7 +6,8 @@ import Cell from './Cell';
 import { RowSelectionProvider, useLatestFunc } from './hooks';
 import { getColSpan, getRowStyle } from './utils';
 import { rowClassname, rowSelectedClassname } from './style';
-import type { CalculatedColumn, RowRendererProps } from './types';
+import type { RowRendererProps } from './types';
+import {isValueInBetween} from "./utils/Helpers";
 
 function Row<R, SR>(
   {
@@ -15,6 +16,7 @@ function Row<R, SR>(
     gridRowStart,
     height,
     selectedCellIdx,
+    selectedCellsRange,
     isRowSelected,
     copiedCellIdx,
     draggedOverCellIdx,
@@ -29,13 +31,17 @@ function Row<R, SR>(
     setDraggedOverRowIdx,
     onMouseEnter,
     onRowChange,
+    onCellMouseDown,
+    onCellMouseUp,
+    onCellMouseEnter,
     selectCell,
+    rangeSelectionMode,
     ...props
   }: RowRendererProps<R, SR>,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const handleRowChange = useLatestFunc((column: CalculatedColumn<R, SR>, newRow: R) => {
-    onRowChange(column, rowIdx, newRow);
+  const handleRowChange = useLatestFunc((newRow: R) => {
+    onRowChange(rowIdx, newRow);
   });
 
   function handleDragEnter(event: React.MouseEvent<HTMLDivElement>) {
@@ -44,13 +50,13 @@ function Row<R, SR>(
   }
 
   className = clsx(
-    rowClassname,
-    `rdg-row-${rowIdx % 2 === 0 ? 'even' : 'odd'}`,
-    {
-      [rowSelectedClassname]: selectedCellIdx === -1
-    },
-    rowClass?.(row),
-    className
+      rowClassname,
+      `rdg-row-${rowIdx % 2 === 0 ? 'even' : 'odd'}`,
+      {
+        [rowSelectedClassname]: selectedCellIdx === -1
+      },
+      rowClass?.(row),
+      className
   );
 
   const cells = [];
@@ -63,7 +69,7 @@ function Row<R, SR>(
       index += colSpan - 1;
     }
 
-    const isCellSelected = selectedCellIdx === idx;
+    const isCellSelected = selectedCellIdx === idx || (rangeSelectionMode && isValueInBetween(idx, selectedCellsRange?.startIdx, selectedCellsRange?.endIdx));
 
     if (isCellSelected && selectedCellEditor) {
       cells.push(selectedCellEditor);
@@ -82,6 +88,10 @@ function Row<R, SR>(
           onRowDoubleClick={onRowDoubleClick}
           onRowChange={handleRowChange}
           selectCell={selectCell}
+          onMouseDownCapture={() => onCellMouseDown?.(row, column)}
+          onMouseUpCapture={() => onCellMouseUp?.(row, column)}
+          onMouseEnter={() => onCellMouseEnter?.(column.idx)}
+          rangeSelectionMode={rangeSelectionMode}
         />
       );
     }

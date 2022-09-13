@@ -122,7 +122,8 @@ export interface CellRendererProps<TRow, TSummaryRow>
   isDraggedOver: boolean;
   isCellSelected: boolean;
   dragHandle: ReactElement<React.HTMLAttributes<HTMLDivElement>> | undefined;
-  onRowChange: (column: CalculatedColumn<TRow, TSummaryRow>, newRow: TRow) => void;
+  onRowChange: (newRow: TRow) => void;
+  rangeSelectionMode: boolean;
 }
 
 export interface RowRendererProps<TRow, TSummaryRow = unknown>
@@ -131,6 +132,7 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   row: TRow;
   rowIdx: number;
   selectedCellIdx: number | undefined;
+  selectedCellsRange: { startIdx: number, endIdx: number };
   copiedCellIdx: number | undefined;
   draggedOverCellIdx: number | undefined;
   lastFrozenColumnIndex: number;
@@ -139,9 +141,13 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   height: number;
   selectedCellEditor: ReactElement<EditorProps<TRow>> | undefined;
   selectedCellDragHandle: ReactElement<React.HTMLAttributes<HTMLDivElement>> | undefined;
-  onRowChange: (column: CalculatedColumn<TRow, TSummaryRow>, rowIdx: number, newRow: TRow) => void;
+  rangeSelectionMode: boolean;
+  onRowChange: (rowIdx: number, newRow: TRow) => void;
   onRowClick: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
   onRowDoubleClick: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
+  onCellMouseDown: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
+  onCellMouseUp: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
+  onCellMouseEnter: Maybe<(columnIdx: number) => void>;
   rowClass: Maybe<(row: TRow) => Maybe<string>>;
   setDraggedOverRowIdx: ((overRowIdx: number) => void) | undefined;
   selectCell: (
@@ -178,6 +184,22 @@ export interface PasteEvent<TRow> {
   sourceRow: TRow;
   targetColumnKey: string;
   targetRow: TRow;
+}
+
+export interface MultiPasteEvent {
+  copiedRange: CellsRange;
+  targetRange: CellsRange
+}
+
+export interface CellsRange {
+  startRowIdx: number
+  startColumnIdx: number
+  endRowIdx: number
+  endColumnIdx: number
+}
+
+export interface MultiCopyEvent {
+  cellsRange: CellsRange
 }
 
 export interface GroupRow<TRow> {

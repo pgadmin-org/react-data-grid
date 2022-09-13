@@ -174,18 +174,31 @@ export function useViewportRows<R>({
   let rowOverscanStartIdx = 0;
   let rowOverscanEndIdx = rows.length - 1;
 
+  let topFillerHeight = 0;
+  let bottomFillerHeight = 0;
+
   if (enableVirtualization) {
     const overscanThreshold = 4;
     const rowVisibleStartIdx = findRowIdx(scrollTop);
     const rowVisibleEndIdx = findRowIdx(scrollTop + clientHeight);
     rowOverscanStartIdx = max(0, rowVisibleStartIdx - overscanThreshold);
     rowOverscanEndIdx = min(rows.length - 1, rowVisibleEndIdx + overscanThreshold);
+    topFillerHeight = getRowHeight(rowOverscanStartIdx)*rowOverscanStartIdx;
+
+    /* Make the filler fill the available blank space */
+    bottomFillerHeight = clientHeight - getRowHeight(rowOverscanStartIdx)*(rows.length);
+    /* Negative number indicates more rows than viewport */
+    if(bottomFillerHeight <= 0) {
+      bottomFillerHeight = getRowHeight(rowOverscanStartIdx)*(rowsCount - rowOverscanEndIdx - 1);
+    }
   }
 
   return {
     rowOverscanStartIdx,
     rowOverscanEndIdx,
     rows,
+    topFillerHeight,
+    bottomFillerHeight,
     rowsCount,
     totalRowHeight,
     gridTemplateRows,
