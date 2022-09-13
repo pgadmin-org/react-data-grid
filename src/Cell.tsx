@@ -33,6 +33,7 @@ function Cell<R, SR>({
   onRowDoubleClick,
   onRowChange,
   selectCell,
+  rangeSelectionMode,
   ...props
 }: CellRendererProps<R, SR>) {
   const { ref, tabIndex, onFocus } = useRovingCellRef(isCellSelected);
@@ -65,8 +66,11 @@ function Cell<R, SR>({
     onRowDoubleClick?.(row, column);
   }
 
-  function handleRowChange(newRow: R) {
-    onRowChange(column, newRow);
+  function onMouseDown(){
+    if(rangeSelectionMode){
+      selectCellWrapper(false);
+      onRowClick?.(row, column);
+    }
   }
 
   return (
@@ -84,6 +88,7 @@ function Cell<R, SR>({
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       onFocus={onFocus}
+      onMouseDown={onMouseDown}
       {...props}
     >
       {!column.rowGroup && (
@@ -92,7 +97,7 @@ function Cell<R, SR>({
             column={column}
             row={row}
             isCellSelected={isCellSelected}
-            onRowChange={handleRowChange}
+            onRowChange={onRowChange}
           />
           {dragHandle}
         </>

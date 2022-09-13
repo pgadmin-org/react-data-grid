@@ -36,6 +36,7 @@ const headerRow = css`
     z-index: 2;
     position: sticky;
     inset-block-start: 0;
+    height: var(--rdg-header-row-height);
   }
 
   > .${cellFrozen} {
