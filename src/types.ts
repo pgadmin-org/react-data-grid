@@ -145,7 +145,14 @@ export interface CellRendererProps<TRow, TSummaryRow>
   extends Pick<RenderRowProps<TRow, TSummaryRow>, 'row' | 'rowIdx' | 'selectCell'>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      'style' | 'children' | 'onClick' | 'onDoubleClick' | 'onContextMenu'
+      | 'style'
+      | 'children'
+      | 'onClick'
+      | 'onDoubleClick'
+      | 'onContextMenu'
+      | 'onMouseDownCapture'
+      | 'onMouseUpCapture'
+      | 'onMouseEnter'
     > {
   column: CalculatedColumn<TRow, TSummaryRow>;
   colSpan: number | undefined;
@@ -156,6 +163,10 @@ export interface CellRendererProps<TRow, TSummaryRow>
   onDoubleClick: RenderRowProps<TRow, TSummaryRow>['onCellDoubleClick'];
   onContextMenu: RenderRowProps<TRow, TSummaryRow>['onCellContextMenu'];
   onRowChange: (column: CalculatedColumn<TRow, TSummaryRow>, newRow: TRow) => void;
+  rangeSelectionMode: boolean;
+  onMouseDownCapture: RenderRowProps<TRow, TSummaryRow>['onCellMouseDown'];
+  onMouseUpCapture: RenderRowProps<TRow, TSummaryRow>['onCellMouseUp'];
+  onMouseEnter: RenderRowProps<TRow, TSummaryRow>['onCellMouseEnter'];
 }
 
 export type CellEvent<E extends React.SyntheticEvent<HTMLDivElement>> = E & {
@@ -224,6 +235,18 @@ export interface RenderRowProps<TRow, TSummaryRow = unknown>
   onRowChange: (column: CalculatedColumn<TRow, TSummaryRow>, rowIdx: number, newRow: TRow) => void;
   rowClass: Maybe<(row: TRow, rowIdx: number) => Maybe<string>>;
   setDraggedOverRowIdx: ((overRowIdx: number) => void) | undefined;
+  // Multi range selection
+  selectedCellsRange: { startIdx: number; endIdx: number };
+  rangeSelectionMode: boolean;
+  onCellMouseDown: Maybe<
+    (args: CellClickArgs<NoInfer<TRow>, NoInfer<TSummaryRow>>, event: CellMouseEvent) => void
+  >;
+  onCellMouseUp: Maybe<
+    (args: CellClickArgs<NoInfer<TRow>, NoInfer<TSummaryRow>>, event: CellMouseEvent) => void
+  >;
+  onCellMouseEnter: Maybe<
+    (args: CellClickArgs<NoInfer<TRow>, NoInfer<TSummaryRow>>, event: CellMouseEvent) => void
+  >;
 }
 
 export interface RowsChangeData<R, SR = unknown> {
@@ -251,6 +274,24 @@ export interface PasteEvent<TRow> {
   sourceRow: TRow;
   targetColumnKey: string;
   targetRow: TRow;
+}
+
+export interface MultiPasteEvent {
+  copiedRange: CellsRange;
+  targetRange: CellsRange;
+}
+
+export interface CellsRange {
+  startRowIdx: number;
+  startColumnIdx: number;
+  endRowIdx: number;
+  endColumnIdx: number;
+}
+
+export interface MultiCopyEvent<TRow> {
+  cellsRange: CellsRange;
+  sourceColumnKeys: string[];
+  sourceRows: TRow[];
 }
 
 export interface GroupRow<TRow> {

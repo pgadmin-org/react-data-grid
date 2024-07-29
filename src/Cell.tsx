@@ -38,6 +38,10 @@ function Cell<R, SR>({
   onContextMenu,
   onRowChange,
   selectCell,
+  rangeSelectionMode,
+  onMouseDownCapture,
+  onMouseUpCapture,
+  onMouseEnter,
   ...props
 }: CellRendererProps<R, SR>) {
   const { tabIndex, childTabIndex, onFocus } = useRovingTabIndex(isCellSelected);
@@ -88,6 +92,23 @@ function Cell<R, SR>({
     onRowChange(column, newRow);
   }
 
+  function onMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+    if (rangeSelectionMode) {
+      selectCellWrapper(false);
+    }
+  }
+
+  function getOnMouseEvent(handler: typeof onMouseDownCapture) {
+    function onMouseEvent(event: React.MouseEvent<HTMLDivElement>) {
+      if (handler) {
+        const cellEvent = createCellEvent(event);
+        handler({ row, column, selectCell: selectCellWrapper }, cellEvent);
+      }
+    }
+
+    return onMouseEvent;
+  }
+
   return (
     <div
       role="gridcell"
@@ -102,6 +123,10 @@ function Cell<R, SR>({
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       onFocus={onFocus}
+      onMouseDown={onMouseDown}
+      onMouseDownCapture={getOnMouseEvent(onMouseDownCapture)}
+      onMouseUpCapture={getOnMouseEvent(onMouseUpCapture)}
+      onMouseEnter={getOnMouseEvent(onMouseEnter)}
       {...props}
     >
       {column.renderCell({

@@ -114,6 +114,9 @@ export default function Nav({ direction, onDirectionChange }: Props) {
       <NavLink to="/animation" end className={getActiveClassname}>
         Animation
       </NavLink>
+      <NavLink to="/range-selection" end className={getActiveClassname}>
+        Range Selection
+      </NavLink>
 
       <h2>Links</h2>
       <a

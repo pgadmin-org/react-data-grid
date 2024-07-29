@@ -20,6 +20,7 @@ import InfiniteScrolling from './demos/InfiniteScrolling';
 import MasterDetail from './demos/MasterDetail';
 import MillionCells from './demos/MillionCells';
 import NoRows from './demos/NoRows';
+import RangeSelection from './demos/RangeSelection';
 import ResizableGrid from './demos/Resizable';
 import RowGrouping from './demos/RowGrouping';
 import RowsReordering from './demos/RowsReordering';
@@ -68,6 +69,7 @@ function Root() {
           <Route path="tree-view" element={<TreeView direction={direction} />} />
           <Route path="variable-row-height" element={<VariableRowHeight direction={direction} />} />
           <Route path="animation" element={<Animation direction={direction} />} />
+          <Route path="range-selection" element={<RangeSelection direction={direction} />} />
           <Route path="*" element="Nothing to see here" />
         </Routes>
       </main>
