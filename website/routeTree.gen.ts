@@ -17,6 +17,7 @@ import { Route as ScrollToCellImport } from './routes/ScrollToCell'
 import { Route as RowsReorderingImport } from './routes/RowsReordering'
 import { Route as RowGroupingImport } from './routes/RowGrouping'
 import { Route as ResizableGridImport } from './routes/ResizableGrid'
+import { Route as RangeSelectionImport } from './routes/RangeSelection'
 import { Route as NoRowsImport } from './routes/NoRows'
 import { Route as MillionCellsImport } from './routes/MillionCells'
 import { Route as MasterDetailImport } from './routes/MasterDetail'
@@ -68,6 +69,12 @@ const RowGroupingRoute = RowGroupingImport.update({
 const ResizableGridRoute = ResizableGridImport.update({
   id: '/ResizableGrid',
   path: '/ResizableGrid',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RangeSelectionRoute = RangeSelectionImport.update({
+  id: '/RangeSelection',
+  path: '/RangeSelection',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -270,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoRowsImport
       parentRoute: typeof rootRoute
     }
+    '/RangeSelection': {
+      id: '/RangeSelection'
+      path: '/RangeSelection'
+      fullPath: '/RangeSelection'
+      preLoaderRoute: typeof RangeSelectionImport
+      parentRoute: typeof rootRoute
+    }
     '/ResizableGrid': {
       id: '/ResizableGrid'
       path: '/ResizableGrid'
@@ -333,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/MasterDetail': typeof MasterDetailRoute
   '/MillionCells': typeof MillionCellsRoute
   '/NoRows': typeof NoRowsRoute
+  '/RangeSelection': typeof RangeSelectionRoute
   '/ResizableGrid': typeof ResizableGridRoute
   '/RowGrouping': typeof RowGroupingRoute
   '/RowsReordering': typeof RowsReorderingRoute
@@ -357,6 +372,7 @@ export interface FileRoutesByTo {
   '/MasterDetail': typeof MasterDetailRoute
   '/MillionCells': typeof MillionCellsRoute
   '/NoRows': typeof NoRowsRoute
+  '/RangeSelection': typeof RangeSelectionRoute
   '/ResizableGrid': typeof ResizableGridRoute
   '/RowGrouping': typeof RowGroupingRoute
   '/RowsReordering': typeof RowsReorderingRoute
@@ -382,6 +398,7 @@ export interface FileRoutesById {
   '/MasterDetail': typeof MasterDetailRoute
   '/MillionCells': typeof MillionCellsRoute
   '/NoRows': typeof NoRowsRoute
+  '/RangeSelection': typeof RangeSelectionRoute
   '/ResizableGrid': typeof ResizableGridRoute
   '/RowGrouping': typeof RowGroupingRoute
   '/RowsReordering': typeof RowsReorderingRoute
@@ -408,6 +425,7 @@ export interface FileRouteTypes {
     | '/MasterDetail'
     | '/MillionCells'
     | '/NoRows'
+    | '/RangeSelection'
     | '/ResizableGrid'
     | '/RowGrouping'
     | '/RowsReordering'
@@ -431,6 +449,7 @@ export interface FileRouteTypes {
     | '/MasterDetail'
     | '/MillionCells'
     | '/NoRows'
+    | '/RangeSelection'
     | '/ResizableGrid'
     | '/RowGrouping'
     | '/RowsReordering'
@@ -454,6 +473,7 @@ export interface FileRouteTypes {
     | '/MasterDetail'
     | '/MillionCells'
     | '/NoRows'
+    | '/RangeSelection'
     | '/ResizableGrid'
     | '/RowGrouping'
     | '/RowsReordering'
@@ -479,6 +499,7 @@ export interface RootRouteChildren {
   MasterDetailRoute: typeof MasterDetailRoute
   MillionCellsRoute: typeof MillionCellsRoute
   NoRowsRoute: typeof NoRowsRoute
+  RangeSelectionRoute: typeof RangeSelectionRoute
   ResizableGridRoute: typeof ResizableGridRoute
   RowGroupingRoute: typeof RowGroupingRoute
   RowsReorderingRoute: typeof RowsReorderingRoute
@@ -503,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDetailRoute: MasterDetailRoute,
   MillionCellsRoute: MillionCellsRoute,
   NoRowsRoute: NoRowsRoute,
+  RangeSelectionRoute: RangeSelectionRoute,
   ResizableGridRoute: ResizableGridRoute,
   RowGroupingRoute: RowGroupingRoute,
   RowsReorderingRoute: RowsReorderingRoute,
@@ -536,6 +558,7 @@ export const routeTree = rootRoute
         "/MasterDetail",
         "/MillionCells",
         "/NoRows",
+        "/RangeSelection",
         "/ResizableGrid",
         "/RowGrouping",
         "/RowsReordering",
@@ -588,6 +611,9 @@ export const routeTree = rootRoute
     },
     "/NoRows": {
       "filePath": "NoRows.tsx"
+    },
+    "/RangeSelection": {
+      "filePath": "RangeSelection.tsx"
     },
     "/ResizableGrid": {
       "filePath": "ResizableGrid.tsx"
