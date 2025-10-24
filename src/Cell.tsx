@@ -32,6 +32,10 @@ function Cell<R, SR>({
   onRowChange,
   selectCell,
   style,
+  rangeSelectionMode,
+  onMouseDownCapture,
+  onMouseUpCapture,
+  onMouseEnter,
   ...props
 }: CellRendererProps<R, SR>) {
   const { tabIndex, childTabIndex, onFocus } = useRovingTabIndex(isCellSelected);
@@ -112,6 +116,9 @@ function Cell<R, SR>({
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       onFocus={onFocus}
+      onMouseDownCapture={(e) => handleMouseEvent(e, onMouseDownCapture)}
+      onMouseUpCapture={(e) => handleMouseEvent(e, onMouseUpCapture)}
+      onMouseEnter={(e) => handleMouseEvent(e, onMouseEnter)}
       {...props}
     >
       {column.renderCell({

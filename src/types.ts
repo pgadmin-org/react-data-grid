@@ -161,13 +161,20 @@ export interface RenderHeaderCellProps<TRow, TSummaryRow = unknown> {
 }
 
 interface BaseCellRendererProps<TRow, TSummaryRow = unknown>
-  extends Omit<React.ComponentProps<'div'>, 'children'>,
+  extends Omit<
+      React.ComponentProps<'div'>,
+      'children' | 'onMouseDownCapture' | 'onMouseUpCapture' | 'onMouseEnter'
+    >,
     Pick<
       DataGridProps<TRow, TSummaryRow>,
       'onCellMouseDown' | 'onCellClick' | 'onCellDoubleClick' | 'onCellContextMenu'
     > {
   rowIdx: number;
   selectCell: (position: Position, options?: SelectCellOptions) => void;
+  rangeSelectionMode: boolean;
+  onMouseDownCapture: CellMouseEventHandler<TRow, TSummaryRow>;
+  onMouseUpCapture: CellMouseEventHandler<TRow, TSummaryRow>;
+  onMouseEnter: CellMouseEventHandler<TRow, TSummaryRow>;
 }
 
 export interface CellRendererProps<TRow, TSummaryRow>
@@ -247,6 +254,7 @@ export interface RenderRowProps<TRow, TSummaryRow = unknown>
   selectedCellEditor: ReactElement<RenderEditCellProps<TRow>> | undefined;
   onRowChange: (column: CalculatedColumn<TRow, TSummaryRow>, rowIdx: number, newRow: TRow) => void;
   rowClass: Maybe<(row: TRow, rowIdx: number) => Maybe<string>>;
+  selectedCellsRange: { startIdx: number; endIdx: number };
 }
 
 export interface RowsChangeData<R, SR = unknown> {
@@ -277,6 +285,24 @@ interface CellCopyPasteArgs<TRow, TSummaryRow = unknown> {
 
 export type CellCopyArgs<TRow, TSummaryRow = unknown> = CellCopyPasteArgs<TRow, TSummaryRow>;
 export type CellPasteArgs<TRow, TSummaryRow = unknown> = CellCopyPasteArgs<TRow, TSummaryRow>;
+
+export interface MultiPasteEvent {
+  copiedRange: CellsRange;
+  targetRange: CellsRange;
+}
+
+export interface CellsRange {
+  startRowIdx: number;
+  startColumnIdx: number;
+  endRowIdx: number;
+  endColumnIdx: number;
+}
+
+export interface MultiCopyEvent<TRow> {
+  cellsRange: CellsRange;
+  sourceColumnKeys: string[];
+  sourceRows: TRow[];
+}
 
 export interface GroupRow<TRow> {
   readonly childRows: readonly TRow[];
