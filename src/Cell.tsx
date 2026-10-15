@@ -71,8 +71,13 @@ function Cell<R, SR>({
   function handleMouseDown(event: MouseEvent<HTMLDivElement>) {
     onMouseDown?.(event);
     if (!handleMouseEvent(event, onCellMouseDown)) {
-      // select cell if the event is not prevented
-      selectCellWrapper();
+      // select cell if the event is not prevented, or extend the
+      // selected range up to this cell on shift + click
+      if (rangeSelectionMode && event.shiftKey) {
+        selectCell({ rowIdx, idx: column.idx }, { extendRange: true });
+      } else {
+        selectCellWrapper();
+      }
     }
   }
 
