@@ -382,9 +382,9 @@ function RangeSelection() {
 
   function handleMultiCopy({ sourceRows, sourceColumnKeys }: MultiCopyEvent<Row>): void {
     if (window.isSecureContext) {
-      const rows: any[] = [];
+      const rows: string[] = [];
       for (const row of sourceRows) {
-        rows.push(sourceColumnKeys.map((c) => (row as any)[c]).join('\t'));
+        rows.push(sourceColumnKeys.map((c) => row[c as keyof Row]).join('\t'));
       }
       navigator.clipboard.writeText(rows.join('\n'));
     }
@@ -419,9 +419,12 @@ function RangeSelection() {
       ) {
         const sourceColumnKey = columns[sourceStartCol + j].key;
         const destinationColumnKey = columns[destinationStartCol + j].key;
-        (newRows[destinationStartRow + i] as any)[destinationColumnKey] = (
-          newRows[sourceStartRow + i] as any
-        )[sourceColumnKey];
+        const sourceRow = newRows[sourceStartRow + i] as unknown as Record<string, unknown>;
+        const destinationRow = newRows[destinationStartRow + i] as unknown as Record<
+          string,
+          unknown
+        >;
+        destinationRow[destinationColumnKey] = sourceRow[sourceColumnKey];
       }
     }
 

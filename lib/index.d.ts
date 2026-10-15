@@ -1,14 +1,6 @@
-import * as react0$1 from "react";
 import * as react0 from "react";
-import * as react6 from "react";
 import { Key, ReactElement, ReactNode } from "react";
-import * as react_jsx_runtime0$1 from "react/jsx-runtime";
 import * as react_jsx_runtime0 from "react/jsx-runtime";
-import * as react_jsx_runtime10 from "react/jsx-runtime";
-import * as react_jsx_runtime8 from "react/jsx-runtime";
-import * as react_jsx_runtime6 from "react/jsx-runtime";
-import * as react_jsx_runtime3 from "react/jsx-runtime";
-import * as react_jsx_runtime4 from "react/jsx-runtime";
 
 //#region src/types.d.ts
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -448,7 +440,7 @@ interface DataGridProps<R$1, SR$1 = unknown, K extends Key = Key> extends Shared
  *
  * <DataGrid columns={columns} rows={rows} />
  */
-declare function DataGrid<R$1, SR$1 = unknown, K extends Key = Key>(props: DataGridProps<R$1, SR$1, K>): react_jsx_runtime0$1.JSX.Element;
+declare function DataGrid<R$1, SR$1 = unknown, K extends Key = Key>(props: DataGridProps<R$1, SR$1, K>): react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/TreeDataGrid.d.ts
 interface TreeDataGridProps<R$1, SR$1 = unknown, K extends Key = Key> extends Omit<DataGridProps<R$1, SR$1, K>, 'columns' | 'role' | 'aria-rowcount' | 'rowHeight' | 'onFill' | 'isRowSelectionDisabled'> {
@@ -481,7 +473,7 @@ declare function TreeDataGrid<R$1, SR$1 = unknown, K extends Key = Key>({
 }: TreeDataGridProps<R$1, SR$1, K>): react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/DataGridDefaultRenderersContext.d.ts
-declare const DataGridDefaultRenderersContext: react0$1.Context<Maybe<Renderers<any, any>>>;
+declare const DataGridDefaultRenderersContext: react0.Context<Maybe<Renderers<any, any>>>;
 //#endregion
 //#region src/Row.d.ts
 declare const RowComponent: <R, SR>(props: RenderRowProps<R, SR>) => React.JSX.Element;
@@ -498,16 +490,16 @@ declare function renderCheckbox({
   onChange,
   indeterminate,
   ...props
-}: RenderCheckboxProps): react_jsx_runtime10.JSX.Element;
+}: RenderCheckboxProps): react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/cellRenderers/renderToggleGroup.d.ts
-declare function renderToggleGroup<R$1, SR$1>(props: RenderGroupCellProps<R$1, SR$1>): react_jsx_runtime8.JSX.Element;
+declare function renderToggleGroup<R$1, SR$1>(props: RenderGroupCellProps<R$1, SR$1>): react_jsx_runtime0.JSX.Element;
 declare function ToggleGroup<R$1, SR$1>({
   groupKey,
   isExpanded,
   tabIndex,
   toggleGroup
-}: RenderGroupCellProps<R$1, SR$1>): react_jsx_runtime8.JSX.Element;
+}: RenderGroupCellProps<R$1, SR$1>): react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/cellRenderers/renderValue.d.ts
 declare function renderValue<R$1, SR$1>(props: RenderCellProps<R$1, SR$1>): react0.ReactNode;
@@ -525,7 +517,7 @@ declare function SelectCellFormatter({
   onChange,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy
-}: SelectCellFormatterProps): react6.ReactNode;
+}: SelectCellFormatterProps): react0.ReactNode;
 //#endregion
 //#region src/editors/textEditor.d.ts
 declare function textEditor<TRow, TSummaryRow>({
@@ -533,19 +525,19 @@ declare function textEditor<TRow, TSummaryRow>({
   column,
   onRowChange,
   onClose
-}: RenderEditCellProps<TRow, TSummaryRow>): react_jsx_runtime6.JSX.Element;
+}: RenderEditCellProps<TRow, TSummaryRow>): react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/renderHeaderCell.d.ts
 declare function renderHeaderCell<R$1, SR$1>({
   column,
   sortDirection,
   priority
-}: RenderHeaderCellProps<R$1, SR$1>): string | react_jsx_runtime3.JSX.Element;
+}: RenderHeaderCellProps<R$1, SR$1>): string | react_jsx_runtime0.JSX.Element;
 //#endregion
 //#region src/sortStatus.d.ts
 declare function renderSortIcon({
   sortDirection
-}: RenderSortIconProps): react_jsx_runtime4.JSX.Element | null;
+}: RenderSortIconProps): react_jsx_runtime0.JSX.Element | null;
 declare function renderSortPriority({
   priority
 }: RenderSortPriorityProps): number | undefined;

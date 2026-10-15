@@ -119,6 +119,10 @@ const initialSelectedRange: CellsRange = {
   endColumnIdx: -1
 };
 
+function isRangeSelectionKey(key: string) {
+  return key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight';
+}
+
 export interface DataGridHandle {
   element: HTMLDivElement | null;
   scrollToCell: (position: PartialPosition) => void;
@@ -679,7 +683,9 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
     const isRowEvent = isTreeGrid && event.target === focusSinkRef.current;
     if (!isCellEvent && !isRowEvent) return;
 
-    if (event.shiftKey) {
+    // With range selection enabled, shift + arrow keys extend the selected range;
+    // every other key (and every key when it is disabled) behaves as normal.
+    if (enableRangeSelection && event.shiftKey && isRangeSelectionKey(event.key)) {
       switch (event.key) {
         case 'ArrowUp':
           if (selectedRange.endRowIdx > 0) {
@@ -716,24 +722,41 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
         default:
           break;
       }
-    } else {
-      switch (event.key) {
-        case 'ArrowUp':
-        case 'ArrowDown':
-        case 'ArrowLeft':
-        case 'ArrowRight':
-        case 'Tab':
-        case 'Home':
-        case 'End':
-        case 'PageUp':
-        case 'PageDown':
-          navigate(event);
-          break;
-        default:
-          handleCellInput(event);
-          break;
-      }
+      return;
     }
+
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'ArrowLeft':
+      case 'ArrowRight':
+      case 'Tab':
+      case 'Home':
+      case 'End':
+      case 'PageUp':
+      case 'PageDown':
+        navigate(event);
+        break;
+      default:
+        handleCellInput(event);
+        break;
+    }
+  }
+
+  function handleRangeMouseDown() {
+    setIsMouseRangeSelectionMode(true);
+  }
+
+  function handleRangeMouseUp() {
+    setIsMouseRangeSelectionMode(false);
+
+    // Once the ranges are decided, re-evaluate start and end;
+    setSelectedRange((boundValue) => ({
+      startColumnIdx: Math.min(boundValue.startColumnIdx, boundValue.endColumnIdx),
+      endColumnIdx: Math.max(boundValue.startColumnIdx, boundValue.endColumnIdx),
+      startRowIdx: Math.min(boundValue.startRowIdx, boundValue.endRowIdx),
+      endRowIdx: Math.max(boundValue.startRowIdx, boundValue.endRowIdx)
+    }));
   }
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -1269,27 +1292,19 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
           selectCell: selectCellLatest,
           selectedCellEditor: getCellEditor(rowIdx),
           rangeSelectionMode: enableRangeSelection,
-          onMouseDownCapture: () => setIsMouseRangeSelectionMode(true),
-          onMouseUpCapture: () => {
-            setIsMouseRangeSelectionMode(false);
-
-            // Once the ranges are decided, re-evaluate start and end;
-            setSelectedRange((boundValue) => ({
-              startColumnIdx: Math.min(boundValue.startColumnIdx, boundValue.endColumnIdx),
-              endColumnIdx: Math.max(boundValue.startColumnIdx, boundValue.endColumnIdx),
-              startRowIdx: Math.min(boundValue.startRowIdx, boundValue.endRowIdx),
-              endRowIdx: Math.max(boundValue.startRowIdx, boundValue.endRowIdx)
-            }));
-          },
-          onMouseEnter: ({ column }) => {
-            if (isMouseRangeSelectionMode && enableRangeSelection) {
-              setSelectedRangeWithBoundary({
-                ...selectedRange,
-                endRowIdx: rowIdx,
-                endColumnIdx: column.idx
-              });
-            }
-          }
+          onMouseDownCapture: enableRangeSelection ? handleRangeMouseDown : undefined,
+          onMouseUpCapture: enableRangeSelection ? handleRangeMouseUp : undefined,
+          onMouseEnter: enableRangeSelection
+            ? ({ column }) => {
+                if (isMouseRangeSelectionMode) {
+                  setSelectedRangeWithBoundary({
+                    ...selectedRange,
+                    endRowIdx: rowIdx,
+                    endColumnIdx: column.idx
+                  });
+                }
+              }
+            : undefined
         })
       );
     }

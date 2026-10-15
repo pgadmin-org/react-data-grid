@@ -42,6 +42,11 @@ function GroupedRow<R, SR>({
   groupBy,
   toggleGroup,
   isRowSelectionDisabled,
+  // Range selection does not apply to group rows, and these props are not valid on a div
+  rangeSelectionMode,
+  onMouseDownCapture,
+  onMouseUpCapture,
+  onMouseEnter,
   ...props
 }: GroupRowRendererProps<R, SR>) {
   // Select is always the first column
