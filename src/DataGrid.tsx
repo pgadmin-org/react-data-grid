@@ -966,6 +966,31 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
     if (!isCellWithinSelectionBounds(position)) return;
     commitEditorChanges();
 
+    if (
+      options?.extendRange &&
+      enableRangeSelection &&
+      selectedPosition.idx >= 0 &&
+      isRowIdxWithinViewportBounds(selectedPosition.rowIdx) &&
+      isRowIdxWithinViewportBounds(position.rowIdx)
+    ) {
+      // Keep the selected cell as the anchor, as shift + arrow keys do
+      if (selectedPosition.mode === 'EDIT') {
+        // close the editor, its changes have been committed above
+        setSelectedPosition({
+          idx: selectedPosition.idx,
+          rowIdx: selectedPosition.rowIdx,
+          mode: 'SELECT'
+        });
+      }
+      setSelectedRangeWithBoundary({
+        startColumnIdx: selectedPosition.idx,
+        startRowIdx: selectedPosition.rowIdx,
+        endColumnIdx: position.idx,
+        endRowIdx: position.rowIdx
+      });
+      return;
+    }
+
     const samePosition = isSamePosition(selectedPosition, position);
 
     if (options?.enableEditor && isCellEditable(position)) {
@@ -974,6 +999,20 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
     } else if (samePosition) {
       // Avoid re-renders if the selected cell state is the same
       scrollIntoView(getCellToScroll(gridRef.current!));
+      // Clicking the selected cell collapses an extended range back to that cell
+      setSelectedRange((range) =>
+        range.startColumnIdx === position.idx &&
+        range.endColumnIdx === position.idx &&
+        range.startRowIdx === position.rowIdx &&
+        range.endRowIdx === position.rowIdx
+          ? range
+          : {
+              startColumnIdx: position.idx,
+              startRowIdx: position.rowIdx,
+              endColumnIdx: position.idx,
+              endRowIdx: position.rowIdx
+            }
+      );
     } else {
       setShouldFocusCell(options?.shouldFocusCell === true);
       setSelectedPosition({ ...position, mode: 'SELECT' });

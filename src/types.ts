@@ -363,6 +363,8 @@ export interface Renderers<TRow, TSummaryRow> {
 export interface SelectCellOptions {
   enableEditor?: Maybe<boolean>;
   shouldFocusCell?: Maybe<boolean>;
+  /** Extend the selected range from the selected cell instead of moving the selection */
+  extendRange?: Maybe<boolean>;
 }
 
 export interface ColumnWidth {
